@@ -1,0 +1,12 @@
+<% include head %>
+<h3> Edit Post </h3>
+<body>
+<form action="/designistforum/<%= thisPost.id %>?_method=PUT" method="POST">
+<input type="text" name="title" value="<%= thisPost.title %>"> <br><br>
+<textarea name="body" style="margin: 0px; max-height: 350px; max-width: 312px;height: 250px;width: 250px;" > <%= thisPost.body %> </textarea><br><br>
+<button>Submit</button><br><br>
+</form>
+<br><br>
+<a style="font-family: monospace;" href="/">Back to Designist Forum</a><br><br>
+</body>
+</html>

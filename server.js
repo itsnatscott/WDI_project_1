@@ -37,14 +37,28 @@ app.get("/designistforum/:id", function(req,res){
 			item = data
 			res.render('show.ejs', {
 				thisPost: item
-				console.log(thisPost.created_at)
 				});
-		});
+		 });
 });
-//edit post
+//send user to edit form
+app.get("/designistforum/:id/edit", function(req,res){
+	var id = req.params.id
+	db.get("SELECT * FROM post WHERE id = ?", id, function(err, data) {
+		item = data
+		res.render('edit.ejs', {
+			thisPost: item
+		})
+	});
+});
+
+//update post
 app.put("/designistforum/:id", function(req,res){
-	db.run("UPDATE post SET title = ? , body = ? category)")
-})
+	var id = req.params.id
+	db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err){
+		if (err) console.log(err);
+		res.redirect("/designistforum/" + id)
+	});
+});
 
 
 
