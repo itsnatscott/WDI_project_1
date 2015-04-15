@@ -1,0 +1,17 @@
+<% include head %>
+
+<h1><%= thisPost.title %> </h1><br>
+<h3><%= thisPost.category %><br>
+<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" />
+<p><b>by: <%= thisPost.author %> </b><br>
+<%= thisPost.created_at %> <br>
+<%= thisPost.body %> <br>
+<%= thisPost.upvote %><br>
+<%= thisPost.downvote %><br>
+
+<a href="/designistforum/<%= thisPost.id %>/edit">edit this post </a>
+
+
+
+	</body>
+		</html>

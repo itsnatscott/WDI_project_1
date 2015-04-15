@@ -1,0 +1,21 @@
+<% include head %>
+
+	<% post.forEach(function(obj){ %>
+		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/<%= obj.id %>" ><%= obj.title %></a></h2>
+			<h3> <%= obj.category %> </h3>
+			</br>
+			<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);" id="Happy_CpuDude" src="<%= obj.pic %>" />
+			</br>
+			<p style = font-family: 'Oswald', sans-serif;><b> by: <%= obj.author %> </b> 
+			<br> <%= obj.body %> <br>
+			comments: <%= obj.comment %> <br>
+			upvotes: <%= obj.upvote %> <br> 
+			downvotes: <%= obj.downvote %> <br>
+			<br>
+			</p></br>
+		<% }); %>
+
+			<a style="font-family: monospace;" href="/designistforum/new"> New Post! </a>
+
+		</body>
+		</html>
