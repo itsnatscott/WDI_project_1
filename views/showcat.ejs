@@ -1,8 +1,8 @@
 <% include head %>
 
-	<% post.forEach(function(obj){ %>
-		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/<%= obj.id %>" ><%= obj.title %></a></h2>
-			<h3> <%= obj.category %> </h3>
+	<% posts.forEach(function(obj){ %>
+		<h2 style = font-family: 'Oleo Script', cursive;><%= obj.title %></a></h2>
+			<h3> <%= obj.descrp %> </h3>
 			</br>
 			<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);" id="Happy_CpuDude" src="<%= obj.pic %>" />
 			</br>
@@ -16,9 +16,12 @@
 			<% }); %>
 			
 			<h3> Categories </h3>
-			<% cat.forEach(function(itm){ %>
-			<ul> <a href="/designistforum/category/<%= itm.id %>" ><%= itm.title %> posts: <%= itm.posts %> </ul>
+			<% cat.forEach(function(obj){ %>
+			<ul> <%= obj.title %> posts: <%= obj.posts %> </ul>
 			<% }); %>
+			<a style="font-family: monospace;" href="/designistforum/new"> New Post! </a>
+
+
 
 		</body>
 		</html>

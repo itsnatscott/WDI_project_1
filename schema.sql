@@ -14,13 +14,13 @@ CREATE TABLE post (
 );
 
 
--- DROP TABLE IF EXISTS category;
--- CREATE TABLE category (
---   id INTEGER PRIMARY KEY,
---   title TEXT,
---   descrp TEXT,
---   posts INTEGER,
--- );
+DROP TABLE IF EXISTS category;
+CREATE TABLE category (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  descrp TEXT,
+  posts INTEGER
+);
 
 -- DROP TABLE IF EXISTS users;
 -- CREATE TABLE users (
