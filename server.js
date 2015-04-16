@@ -30,7 +30,15 @@ app.get('/designistforum', function(req, res) {
 		});
 	});
 });
-
+//render page to add new users
+app.get('/designistforum/user/new', function(req,res){
+	res.render('newuser.ejs');
+})
+app.post('/designistforum/user', function(req,res){
+	db.run("INSERT INTO users (username, password, email) VALUES (?, ?, ?)" , req.body.username, req.body.password, req.body.email, function(err){if (err) console.log(err);
+		res.redirect('/');
+	});
+});
 //render page to add category
 app.get('/designistforum/category/new', function(req, res) {
 	res.render('newcat.ejs');
@@ -87,7 +95,7 @@ app.get('/designistforum/category/:id/new', function(req, res) {
 });
 //push the new post into existance
 app.post('/designistforum', function(req, res) {
-	db.run("INSERT INTO post (title, body, pic, category) VALUES (? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId, function(err) {
+	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote , downvote) VALUES (? , ? , ? , ? , ? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId,0,0,0,0, function(err) {
 		if (err) console.log(err);
 	})
 	db.run("UPDATE category SET posts = posts +1 WHERE id = ?", pageId)
