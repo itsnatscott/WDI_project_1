@@ -62,6 +62,7 @@ app.post('/designistforum', function(req,res){
 	db.run("INSERT INTO post (title, body, pic, category) VALUES (? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId, function(err){
 		if (err) console.log(err);
 	})
+	db.run("UPDATE category SET posts = posts +1 WHERE id = ?", pageId)
 		res.redirect('/designistforum/category/'+ pageId)
 });
 	
@@ -96,6 +97,17 @@ app.put("/designistforum/:id", function(req, res) {
 		res.redirect("/designistforum/" + id)
 	});
 });
+
+//delete a post
+app.delete("/designistforum/:id", function(req, res) {
+	var id = req.params.id
+	db.run("DELETE FROM post WHERE id = ?", id, function(err) {
+		if (err) console.log(err);
+		console.log("deleted",id)
+		res.redirect('/')
+	});
+});
+
 
 //SELECT post.title  FROM post INNER JOIN category on post.category = category.id;
 //SELECT post.title FROM post INNER JOIN category on post.category = category.id;
