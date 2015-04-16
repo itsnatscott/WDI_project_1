@@ -93,7 +93,7 @@ app.get("/designistforum/:id/edit", function(req, res) {
 app.put("/designistforum/:id", function(req, res) {
 	var id = req.params.id
 	db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err) {
-		if (err) console.log(err);
+		if (err) {console.log(err)};
 		res.redirect("/designistforum/" + id)
 	});
 });
@@ -101,9 +101,16 @@ app.put("/designistforum/:id", function(req, res) {
 //delete a post
 app.delete("/designistforum/:id", function(req, res) {
 	var id = req.params.id
+	var thisCat = 0
+	db.get("SELECT category FROM post WHERE id = ?", id, function(err , data){
+		thisCat=data.category;
+		console.log ("deleting 1 from",thisCat)
+		db.run("UPDATE category SET posts = posts - 1 WHERE id = ?", thisCat , function(err){
+			if (err) {console.log(err)};
+		});
+	});
 	db.run("DELETE FROM post WHERE id = ?", id, function(err) {
 		if (err) console.log(err);
-		console.log("deleted",id)
 		res.redirect('/')
 	});
 });
