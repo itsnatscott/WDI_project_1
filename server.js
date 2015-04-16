@@ -15,6 +15,7 @@ app.use(methodOverride('_method'));
 app.get("/", function(req, res) {
 	res.redirect("/designistforum");
 });
+var pageId = 0
 
 //show all posts
 app.get('/designistforum', function(req, res) {
@@ -34,14 +35,36 @@ app.get('/designistforum/category/:id', function(req, res) {
 	var id = req.params.id
 	db.all("SELECT * FROM post WHERE category = ?", id, function(err, data) {
 		items = data;
-		db.all("SELECT * FROM category", function(err, data2) {
+		db.all("SELECT * FROM category",  function(err, data2) {
+			var pageId = req.params.id
 			var cats = data2
 			res.render('showcat.ejs', {
-				posts: items, cat: cats
+				posts: items, cat: cats, ids: pageId
 			});
 		});
 	});
 });
+
+//render page to make new post
+app.get('/designistforum/category/:id/new', function(req, res) {
+	var id = req.params.id;
+	console.log(id)
+	db.all("SELECT title , id FROM category WHERE id = ?", id , function(err,data){
+		var cat = data;
+		var catTitle = cat[0].title
+		var catId = cat[0].id
+		pageId = req.params.id;
+		res.render('new.ejs',{catTitles : catTitle, catIds : catId});
+	});
+});
+//push the new post into existance
+app.post('/designistforum', function(req,res){
+	db.run("INSERT INTO post (title, body, pic, category) VALUES (? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId, function(err){
+		if (err) console.log(err);
+	})
+		res.redirect('/designistforum/category/'+ pageId)
+});
+	
 
 //show individual post
 app.get("/designistforum/:id", function(req, res) {

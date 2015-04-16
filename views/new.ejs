@@ -1,0 +1,13 @@
+<% include head %>
+<body style="font-family: monospace;">
+<h2 style="font-family: monospace;">New Post : <%= catTitles %></h2>
+<form action ="/designistforum" method="POST">
+<input style = "width: 250px;" type="text" name="title" placeholder="title" required><br><br>
+<textarea name="body" style="margin: 0px; max-height: 350px; max-width: 312px;height: 250px;width: 250px;" required> post your thoughts</textarea>   <br><br>
+Place Picture: <input type="text" name="pic" placeholder="url" required><br><br>
+<button>Submit</button><br><br>
+</form> 
+<h2> <%= catIds %> </h2>
+<a style="font-family: monospace;" href="/designistforum/category/<%= catIds %>">Back to <%= catTitles %> </a>
+</body>
+</html>
