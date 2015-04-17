@@ -9,13 +9,17 @@
 <%= thisPost.upvote %><br>
 <%= thisPost.downvote %><br>
 
-<a href="/designistforum/<%= thisPost.id %>/edit">edit this post </a>
+<a href="/designistforum/category/<%= thisCat.id %>/posts/<%= thisPost.id %>/edit">edit this post </a>
 <h3> comments: </h3>
 <% comment.forEach(function(obj){ %>
-			<p><%= obj.comment %></a></p>
+			<p><b><%= obj.userId %></b><br>
+			<%= obj.comment %></a></p>
 			<br><% }); %>
 <h3> leave a comment </h3>
-<formaction ="/designistforum/:id" method="POST"><textarea name="body" style="margin: 0px; max-height: 350px; max-width: 312px;height: 250px;width: 250px;" required> post your thoughts</textarea><br><br>
+
+<form action ="/designistforum/category/posts/<%= thisPost.id %>/comments" method="POST">
+<input style = "width: 250px;" type="text" name="name" placeholder="name" required><br><br>
+<textarea name="comment" style="margin: 0px; max-height: 350px; max-width: 312px;height: 250px;width: 250px;" required> post your thoughts</textarea><br><br>
 <button>Submit</button><br><br>
 </form> 
 

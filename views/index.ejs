@@ -14,11 +14,13 @@
 			</p></br>
 			<% }); %>
 			
-			<h3> Categories </h3>
+			<ul> 
+			<h2 style="font-family: monospace;"> Categories </h2>
 			<% cat.forEach(function(itm){ %>
-			<ul> <a href="/designistforum/category/<%= itm.id %>" ><%= itm.title %> posts: <%= itm.posts %> </a></ul>
+			<li style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
+			<br>posts: <%= itm.posts %> </li>
 			<% }); %>
-			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a><br><br>
+			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
 
 
 		</body>

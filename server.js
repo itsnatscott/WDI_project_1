@@ -15,7 +15,6 @@ app.use(methodOverride('_method'));
 app.get("/", function(req, res) {
 	res.redirect("/designistforum");
 });
-var pageId = 0
 
 //show all posts
 app.get('/designistforum', function(req, res) {
@@ -53,7 +52,7 @@ app.post('/designistforum/category/', function(req, res) {
 	db.get("SELECT id FROM category WHERE title = ?", req.body.title, function(err, data) {
 		var newCatId = data.id
 		console.log(newCatId)
-		res.redirect('/designistforum/category/' + newCatId + '/new');
+		res.redirect('/designistforum/category/'+newCatId+'/posts/new');
 	});
 });
 //show all from certain category
@@ -81,20 +80,19 @@ app.get('/designistforum/category/:id', function(req, res) {
 //render page to make new post
 app.get('/designistforum/category/:id/posts/new', function(req, res) {
 	var id = req.params.id;
-	console.log(id)
 	db.all("SELECT title , id FROM category WHERE id = ?", id, function(err, data) {
 		var cat = data;
 		var catTitle = cat[0].title
 		var catId = cat[0].id
-		pageId = req.params.id;
 		res.render('new.ejs', {
 			catTitles: catTitle,
 			catIds: catId
 		});
 	});
 });
-//push the new post into existance
-app.post('/designistforum/category/:id/posts/:id', function(req, res) {
+//shove the new post into existance
+app.post('/designistforum/category/:catid/posts', function(req, res) {
+	var pageId = req.params.catid
 	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote , downvote) VALUES (? , ? , ? , ? , ? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId, 0, 0, 0, 0, function(err) {
 		if (err) console.log(err);
 	})
@@ -122,26 +120,34 @@ app.get("/designistforum/category/posts/:id", function(req, res) {
 			});
 	});
 });
+//add comment to a post
+app.post('/designistforum/category/posts/:id/comments', function(req, res){
+db.run("INSERT INTO comments (comment, userId, postId) VALUES (? , ? , ?)",req.body.comment, req.body.name, req.params.id)
+db.run("UPDATE post SET comment = comment +1 WHERE id = ?", req.params.id)
+res.redirect("/designistforum/category/posts/"+req.params.id)
+});
 
 //send user to edit form
-app.get("/designistforum/:id/edit", function(req, res) {
-	var id = req.params.id
-	db.get("SELECT * FROM post WHERE id = ?", id, function(err, data) {
+app.get("/designistforum/category/:catid/posts/:id/edit", function(req, res) {
+	var posId = req.params.id
+	var catId = req.params.catid
+	db.get("SELECT * FROM post WHERE id = ?", req.params.id, function(err, data) {
 		item = data
 		res.render('edit.ejs', {
-			thisPost: item
+			thisPost: item, postId : posId, catsIds: catId
 		})
 	});
 });
 
 //update post
-app.put("/designistforum/:id", function(req, res) {
+app.put("/designistforum/category/:catid/posts/:id/update", function(req, res) {
 	var id = req.params.id
+	var catId = req.params.catid
 	db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err) {
 		if (err) {
 			console.log(err)
 		};
-		res.redirect("/designistforum/" + id)
+		res.redirect("/designistforum/category/posts/" + id)
 	});
 });
 
