@@ -2,12 +2,22 @@
 
 <h1><%= thisPost.title %> </h1>
 <h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3>
-<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" />
+<img style="max-height:600px;max-width:800px; expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" />
 <p><b>by: <%= thisPost.author %> </b><br>
 <%= thisPost.created_at %> <br>
 <%= thisPost.body %> <br>
-<%= thisPost.upvote %><br>
-<%= thisPost.downvote %><br>
+
+
+<form method="POST" action = '/designistforum/category/posts/<%= thisPost.id %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="up">
+<button>GOOD POST</button></form> 
+<h4 style="font-family: monospace;"><%= thisPost.upvote %></h4>
+
+
+<form method = "POST" action = '/designistforum/category/posts/<%= thisPost.id %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="down">
+<button>BAD POST</button></form> <h4 style="font-family: monospace;"><%= thisPost.downvote %></h4>
+
 
 <a href="/designistforum/category/<%= thisCat.id %>/posts/<%= thisPost.id %>/edit">edit this post </a>
 <h3> comments: </h3>
