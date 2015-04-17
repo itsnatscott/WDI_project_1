@@ -4,7 +4,7 @@
 
 
 	<% posts.forEach(function(obj){ %>
-		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/<%= obj.id %>" ><%= obj.title %></a></h2>
+		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/category/posts/<%= obj.id %>" ><%= obj.title %></a></h2>
 			<h3> <%= obj.descrp %> </h3>
 			</br>
 			<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);"src="<%= obj.pic %>" />
@@ -14,16 +14,19 @@
 			comments: <%= obj.comment %> <br>
 			upvotes: <%= obj.upvote %> <br> 
 			downvotes: <%= obj.downvote %> <br>
-			<br><br>
-			</p></br>
+			<br>
+			</p>
 			<% }); %>
 			
-			<h3> Categories </h3>
-			<% cat.forEach(function(obj){ %>
-			<ul> <%= obj.title %> posts: <%= obj.posts %> </ul>
-			
+			<h3><a style="font-family: monospace;" href="/designistforum/category/<%= ids %>/posts/new"> Add a New Post! </a></h3>
+<br>
+			<ul> 
+			<h2 style="font-family: monospace;"> Categories </h2>
+			<% cat.forEach(function(itm){ %>
+			<li style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"> <%= itm.title %> posts: <%= itm.posts %> </a></li>
 			<% }); %>
-			<a style="font-family: monospace;" href="/designistforum/category/<%= ids %>/new"> Add a New Post! </a>
+			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
+		
 
 			<br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a>
 

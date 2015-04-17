@@ -11,7 +11,9 @@
 
 <a href="/designistforum/<%= thisPost.id %>/edit">edit this post </a>
 <h3> comments: </h3>
-<p><b> <%= comment.userId %> : </b><%= comment.comment %></p> 
+<% comment.forEach(function(obj){ %>
+			<p><%= obj.comment %></a></p>
+			<br><% }); %>
 <h3> leave a comment </h3>
 <formaction ="/designistforum/:id" method="POST"><textarea name="body" style="margin: 0px; max-height: 350px; max-width: 312px;height: 250px;width: 250px;" required> post your thoughts</textarea><br><br>
 <button>Submit</button><br><br>

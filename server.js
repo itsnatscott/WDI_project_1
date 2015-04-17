@@ -62,14 +62,13 @@ app.get('/designistforum/category/:id', function(req, res) {
 	db.all("SELECT * FROM post WHERE category = ?", id, function(err, data) {
 		items = data;
 		db.all("SELECT * FROM category", function(err, data2) {
-			var pageId = req.params.id
 			var cats = data2
 			var pTite = cats[id - 1].title
 			var pDesc = cats[id - 1].descrp
 			res.render('showcat.ejs', {
 				posts: items,
 				cat: cats,
-				ids: pageId,
+				ids: req.params.id,
 				title: pTite,
 				script: pDesc
 			});
@@ -80,7 +79,7 @@ app.get('/designistforum/category/:id', function(req, res) {
 
 
 //render page to make new post
-app.get('/designistforum/category/:id/new', function(req, res) {
+app.get('/designistforum/category/:id/posts/new', function(req, res) {
 	var id = req.params.id;
 	console.log(id)
 	db.all("SELECT title , id FROM category WHERE id = ?", id, function(err, data) {
@@ -95,7 +94,7 @@ app.get('/designistforum/category/:id/new', function(req, res) {
 	});
 });
 //push the new post into existance
-app.post('/designistforum', function(req, res) {
+app.post('/designistforum/category/:id/posts/:id', function(req, res) {
 	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote , downvote) VALUES (? , ? , ? , ? , ? , ? , ? , ?)", req.body.title, req.body.body, req.body.pic, pageId, 0, 0, 0, 0, function(err) {
 		if (err) console.log(err);
 	})
@@ -105,16 +104,15 @@ app.post('/designistforum', function(req, res) {
 
 
 //show individual post
-app.get("/designistforum/:id", function(req, res) {
+app.get("/designistforum/category/posts/:id", function(req, res) {
 	var id = req.params.id
 	db.get("SELECT * FROM post WHERE id = ?", id, function(err, data) {
 		item = data
 		db.get("SELECT category.title, category.id FROM post INNER JOIN category on post.category = category.id WHERE post.id = ?", id, function(err, data2) {
 			catItem = data2
-			db.get("SELECT comment, userId FROM comments WHERE postId = ?", id,
+			db.all("SELECT comment, userId FROM comments WHERE postId = ?", id,
 				function(err, data3) {
 					var comm = data3	;
-					console.log(comm,"comm");
 						res.render('show.ejs',{
 				thisPost: item,
 				thisCat: catItem,
@@ -166,7 +164,7 @@ app.delete("/designistforum/:id", function(req, res) {
 	});
 });
 
-
+//SELECT * FROM tablename ORDER BY column DESC LIMIT 1
 //SELECT post.title  FROM post INNER JOIN category on post.category = category.id;
 //SELECT category.title FROM post INNER JOIN category on post.category = category.id;
 /*SELECT category.title , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category on post.category = category.id;*/
