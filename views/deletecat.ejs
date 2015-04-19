@@ -1,0 +1,28 @@
+<% include head %>
+<h1> <%= title %> <h1>
+<h2> <%= script %> <h2>
+<h4> popularity: <%= popularity %> <h4> 
+<form method="POST" action = '/designistforum/category/<%= ids %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="up">
+<button>GOOD Category</button></form> 
+<h4 style="font-family: monospace;"></h4>
+
+
+<form method = "POST" action = '/designistforum/category/<%= ids %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="down">
+<button>BAD Category</button></form> <h4 style="font-family: monospace;"></h4>
+<br>
+<h2> NO POSTS! </h2>
+
+<br><br><form method="POST" action="/designistforum/category/<%= ids %>/delete?_method=DELETE">
+<button>erase this category</button>
+	</form>
+			
+			<h3><a style="font-family: monospace;" href="/designistforum/category/<%= ids %>/posts/new"> Add a New Post! </a></h3>
+		<br>
+			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
+			<br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br>
+			<img id="randomgif" src="<%= gif %>" />
+
+</body>
+		</html>

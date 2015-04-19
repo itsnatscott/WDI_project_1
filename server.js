@@ -14,16 +14,16 @@ var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 var request = require('request');
 var gifs = [];
-var ran = function(gifs){
-	return Math.floor(Math.random()*25)
+var ran = function(gifs) {
+	return Math.floor(Math.random() * 25)
 };
 
-	request("http://api.giphy.com/v1/gifs/search?q=art&api_key="+Giphy, function(err, response, body) {
-		var list = JSON.parse(body)
-		for (i=0; i<25; i++){
-			gifs.push(list.data[i].images.fixed_width["url"])
-			};
-	});
+request("http://api.giphy.com/v1/gifs/search?q=art&api_key=" + Giphy, function(err, response, body) {
+	var list = JSON.parse(body)
+	for (i = 0; i < 25; i++) {
+		gifs.push(list.data[i].images.fixed_width["url"])
+	};
+});
 //redirect "/"
 app.get("/", function(req, res) {
 	res.redirect("/designistforum");
@@ -72,7 +72,7 @@ app.get('/designistforum/category/new', function(req, res) {
 });
 //add category
 app.post('/designistforum/category/', function(req, res) {
-	db.run("INSERT INTO category (title, descrp, posts) VALUES (? , ?, ?)", req.body.title, req.body.descrp, 0, function(err) {
+	db.run("INSERT INTO category (title, descrp, posts, votes) VALUES (? , ?, ?, ?)", req.body.title, req.body.descrp, 0, 0, function(err) {
 		if (err) console.log(err);
 	});
 
@@ -83,25 +83,38 @@ app.post('/designistforum/category/', function(req, res) {
 	});
 });
 //show all from certain category
+
+
 app.get('/designistforum/category/:id', function(req, res) {
 	var id = parseInt(req.params.id)
-	db.all("SELECT * FROM post WHERE category = ? ORDER BY post.id DESC LIMIT 10", id, function(err, data) {
-		items = data;
-		db.all("SELECT * FROM category", function(err, data2) {
-			var cats = data2
-			var pTite = cats[id - 1].title
-			var pDesc = cats[id - 1].descrp
-			var pVote = cats[id - 1].votes
-			res.render('showcat.ejs', {
-				posts: items,
-				cat: cats,
-				ids: req.params.id,
-				title: pTite,
-				script: pDesc,
-				popularity: pVote,
-				gif: gifs[ran()]
-			});
-		});
+	console.log(id)
+	db.all("SELECT * FROM category WHERE id = ?", id, function(err, data2) {
+			var category = data2
+			if (category[0].posts === 0) {
+				res.render('deletecat.ejs', {title: category[0].title, script: category[0].descrp, popularity: category[0].popularity,
+					ids: req.params.id,
+					gif: gifs[ran()]})
+			} else {
+
+				db.all("SELECT * FROM post WHERE category = ? ORDER BY post.upvote DESC LIMIT 10", id, function(err, data) {
+					items = data;
+					db.all("SELECT * FROM category", function(err, data2) {
+						var cats = data2
+						var pTite = cats[id - 1].title
+						var pDesc = cats[id - 1].descrp
+						var pVote = cats[id - 1].votes
+						res.render('showcat.ejs', {
+							posts: items,
+							cat: cats,
+							ids: req.params.id,
+							title: pTite,
+							script: pDesc,
+							popularity: pVote,
+							gif: gifs[ran()]
+						});
+					});
+				});
+			};
 	});
 });
 
@@ -200,6 +213,13 @@ app.put("/designistforum/category/:catid/posts/:id/update", function(req, res) {
 			console.log(err)
 		};
 		res.redirect("/designistforum/category/posts/" + id)
+	});
+});
+// delete a category
+app.delete("/designistforum/category/:id/delete", function(req, res) {
+	db.run("DELETE FROM category WHERE id = ?", req.params.id, function(err) {
+		if (err) console.log(err);
+		res.redirect('/')
 	});
 });
 
