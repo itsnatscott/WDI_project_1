@@ -1,5 +1,6 @@
 <% include head %>
-<a style="font-family: monospace;" href="/designistforum/user/new"> new user id </a>		
+<a style="font-family: monospace;" href="/designistforum/user/new"> new user id </a><br>	<a style="font-family: monospace;" href="/designistforum/popular"> sort by <b>popularity</b> </a>	<br>
+<a style="font-family: monospace;" href="/designistforum"> sort by <b>most recent</b> </a>	
 	<% post.forEach(function(obj){ %>
 		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/category/posts/<%= obj.post_id %>" ><%= obj.title %></a></h2>
 			<h3><%= obj.category_title %></a></h3>
@@ -8,8 +9,7 @@
 			</br>
 			<p style = font-family: 'Oswald', sans-serif;> 
 			comments: <%= obj.comment %> <br>
-			upvotes: <%= obj.upvote %> <br> 
-			downvotes: <%= obj.downvote %> <br>
+			popularity: <%= obj.upvote %> <br> 
 			<br><br>
 			</p></br>
 			<% }); %>
@@ -18,10 +18,11 @@
 			<h2 style="font-family: monospace;"> Categories </h2>
 			<% cat.forEach(function(itm){ %>
 			<li style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
-			<br>posts: <%= itm.posts %> </li>
+			<br>posts: <%= itm.posts %>
+			<br>popularity: <%= itm.votes %> </li>
 			<% }); %>
 			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
-
+		<img id="randomgif" src="<%= gif %>" />
 
 		</body>
 		</html>

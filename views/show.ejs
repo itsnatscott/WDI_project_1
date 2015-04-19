@@ -1,22 +1,21 @@
 <% include head %>
 
-<h1><%= thisPost.title %> </h1>
-<h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3>
-<img style="max-height:600px;max-width:800px; expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" />
-<p><b>by: <%= thisPost.author %> </b><br>
+<h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3><h4>Popularity:<%= thisPost.upvote %><br>
+<img style="max-height:600px;max-width:800px; expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" /><br>
 <%= thisPost.created_at %> <br>
-<%= thisPost.body %> <br>
+<%= thisPost.body %> <br><br>
+
 
 
 <form method="POST" action = '/designistforum/category/posts/<%= thisPost.id %>/votes?_method=PUT'>
 <input type="hidden" name="vote" value="up">
 <button>GOOD POST</button></form> 
-<h4 style="font-family: monospace;"><%= thisPost.upvote %></h4>
+<h4 style="font-family: monospace;"></h4>
 
 
 <form method = "POST" action = '/designistforum/category/posts/<%= thisPost.id %>/votes?_method=PUT'>
 <input type="hidden" name="vote" value="down">
-<button>BAD POST</button></form> <h4 style="font-family: monospace;"><%= thisPost.downvote %></h4>
+<button>BAD POST</button></form> <h4 style="font-family: monospace;"></h4>
 
 
 <a href="/designistforum/category/<%= thisCat.id %>/posts/<%= thisPost.id %>/edit">edit this post </a>
@@ -38,6 +37,7 @@
 	</form>
 
 <a style="font-family: monospace;" href="/">Back to Designist Forum</a><br><br>
+<img id="randomgif" src="<%= gif %>" />
 
 
 

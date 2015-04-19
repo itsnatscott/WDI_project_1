@@ -1,4 +1,5 @@
 //set up npm modules
+var Giphy = require('./keys.js')
 var express = require('express');
 var app = express();
 var sqlite3 = require('sqlite3').verbose();
@@ -11,6 +12,18 @@ app.use(bodyParser.urlencoded({
 }));
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
+var request = require('request');
+var gifs = [];
+var ran = function(gifs){
+	return Math.floor(Math.random()*25)
+};
+
+	request("http://api.giphy.com/v1/gifs/search?q=art&api_key="+Giphy, function(err, response, body) {
+		var list = JSON.parse(body)
+		for (i=0; i<25; i++){
+			gifs.push(list.data[i].images.fixed_width["url"])
+			};
+	});
 //redirect "/"
 app.get("/", function(req, res) {
 	res.redirect("/designistforum");
@@ -18,13 +31,27 @@ app.get("/", function(req, res) {
 
 //show all posts
 app.get('/designistforum', function(req, res) {
+	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.upvote DESC LIMIT 10", function(err, data) {
+		var posts = data;
+		db.all("SELECT * FROM category", function(err, data2) {
+			var cats = data2
+			res.render("index.ejs", {
+				post: posts,
+				cat: cats,
+				gif: gifs[ran()]
+			});
+		});
+	});
+});
+app.get('/designistforum/popular', function(req, res) {
 	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.id DESC LIMIT 10", function(err, data) {
 		var posts = data;
 		db.all("SELECT * FROM category", function(err, data2) {
 			var cats = data2
 			res.render("index.ejs", {
 				post: posts,
-				cat: cats
+				cat: cats,
+				gif: gifs[ran()]
 			});
 		});
 	});
@@ -57,25 +84,36 @@ app.post('/designistforum/category/', function(req, res) {
 });
 //show all from certain category
 app.get('/designistforum/category/:id', function(req, res) {
-	var id = req.params.id
+	var id = parseInt(req.params.id)
 	db.all("SELECT * FROM post WHERE category = ? ORDER BY post.id DESC LIMIT 10", id, function(err, data) {
 		items = data;
 		db.all("SELECT * FROM category", function(err, data2) {
 			var cats = data2
 			var pTite = cats[id - 1].title
 			var pDesc = cats[id - 1].descrp
+			var pVote = cats[id - 1].votes
 			res.render('showcat.ejs', {
 				posts: items,
 				cat: cats,
 				ids: req.params.id,
 				title: pTite,
-				script: pDesc
+				script: pDesc,
+				popularity: pVote,
+				gif: gifs[ran()]
 			});
 		});
 	});
 });
 
-
+//increment popularity of category
+app.put('/designistforum/category/:id/votes', function(req, res) {
+	if (req.body.vote === "up") {
+		db.run("UPDATE category SET votes = votes + 1 WHERE id = ?", req.params.id);
+	} else if (req.body.vote === "down") {
+		db.run("UPDATE category SET votes = votes - 1 WHERE id = ?", req.params.id);
+	};
+	res.redirect('/designistforum/category/' + req.params.id)
+});
 
 //render page to make new post
 app.get('/designistforum/category/:id/posts/new', function(req, res) {
@@ -114,77 +152,79 @@ app.get("/designistforum/category/posts/:id", function(req, res) {
 					res.render('show.ejs', {
 						thisPost: item,
 						thisCat: catItem,
-						comment: comm
+						comment: comm,
+						gif: gifs[ran]
 					});
 				});
 		});
 	});
 });
 
-//increment upvote or downvote log
-app.put('/designistforum/category/posts/:id/votes', function(req, res){
-			if (req.body.vote === "up") { 
-				db.run("UPDATE post SET upvote = upvote + 1 WHERE id = ?", req.params.id);
-			} else if (req.body.vote === "down") { console.log("downvoting in progress")
-				db.run("UPDATE post SET downvote = downvote - 1 WHERE id = ?", req.params.id);
+//increment popularity of post
+app.put('/designistforum/category/posts/:id/votes', function(req, res) {
+	if (req.body.vote === "up") {
+		db.run("UPDATE post SET upvote = upvote + 1 WHERE id = ?", req.params.id);
+	} else if (req.body.vote === "down") {
+		db.run("UPDATE post SET upvote = upvote - 1 WHERE id = ?", req.params.id);
+	};
+	res.redirect('/designistforum/category/posts/' + req.params.id)
+});
+
+//add comment to a post
+app.post('/designistforum/category/posts/:id/comments', function(req, res) {
+	db.run("INSERT INTO comments (comment, userId, postId) VALUES (? , ? , ?)", req.body.comment, req.body.name, req.params.id)
+	db.run("UPDATE post SET comment = comment +1 WHERE id = ?", req.params.id)
+	res.redirect("/designistforum/category/posts/" + req.params.id)
+});
+
+//send user to edit form
+app.get("/designistforum/category/:catid/posts/:id/edit", function(req, res) {
+	var posId = req.params.id
+	var catId = req.params.catid
+	db.get("SELECT * FROM post WHERE id = ?", req.params.id, function(err, data) {
+		item = data
+		res.render('edit.ejs', {
+			thisPost: item,
+			postId: posId,
+			catsIds: catId
+		})
+	});
+});
+
+//update post
+app.put("/designistforum/category/:catid/posts/:id/update", function(req, res) {
+	var id = req.params.id
+	var catId = req.params.catid
+	db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err) {
+		if (err) {
+			console.log(err)
+		};
+		res.redirect("/designistforum/category/posts/" + id)
+	});
+});
+
+//delete a post
+app.delete("/designistforum/:id", function(req, res) {
+	var id = req.params.id
+	var thisCat = 0
+	db.get("SELECT category FROM post WHERE id = ?", id, function(err, data) {
+		thisCat = data.category;
+		console.log("deleting 1 from", thisCat)
+		db.run("UPDATE category SET posts = posts - 1 WHERE id = ?", thisCat, function(err) {
+			if (err) {
+				console.log(err)
 			};
-			res.redirect('/designistforum/category/posts/'+req.params.id)
 		});
+	});
+	db.run("DELETE FROM post WHERE id = ?", id, function(err) {
+		if (err) console.log(err);
+		res.redirect('/')
+	});
+});
 
-	//add comment to a post
-		app.post('/designistforum/category/posts/:id/comments', function(req, res) {
-			db.run("INSERT INTO comments (comment, userId, postId) VALUES (? , ? , ?)", req.body.comment, req.body.name, req.params.id)
-			db.run("UPDATE post SET comment = comment +1 WHERE id = ?", req.params.id)
-			res.redirect("/designistforum/category/posts/" + req.params.id)
-		});
-
-		//send user to edit form
-		app.get("/designistforum/category/:catid/posts/:id/edit", function(req, res) {
-			var posId = req.params.id
-			var catId = req.params.catid
-			db.get("SELECT * FROM post WHERE id = ?", req.params.id, function(err, data) {
-				item = data
-				res.render('edit.ejs', {
-					thisPost: item,
-					postId: posId,
-					catsIds: catId
-				})
-			});
-		});
-
-		//update post
-		app.put("/designistforum/category/:catid/posts/:id/update", function(req, res) {
-			var id = req.params.id
-			var catId = req.params.catid
-			db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err) {
-				if (err) {
-					console.log(err)
-				};
-				res.redirect("/designistforum/category/posts/" + id)
-			});
-		});
-
-		//delete a post
-		app.delete("/designistforum/:id", function(req, res) {
-			var id = req.params.id
-			var thisCat = 0
-			db.get("SELECT category FROM post WHERE id = ?", id, function(err, data) {
-				thisCat = data.category;
-				console.log("deleting 1 from", thisCat)
-				db.run("UPDATE category SET posts = posts - 1 WHERE id = ?", thisCat, function(err) {
-					if (err) {
-						console.log(err)
-					};
-				});
-			});
-			db.run("DELETE FROM post WHERE id = ?", id, function(err) {
-				if (err) console.log(err);
-				res.redirect('/')
-			});
-		});
-
-		//SELECT * FROM tablename ORDER BY column DESC LIMIT 1
-		//SELECT post.title  FROM post INNER JOIN category on post.category = category.id;
-		//SELECT category.title FROM post INNER JOIN category on post.category = category.id;
-		/*SELECT category.title , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category on post.category = category.id;*/
-		app.listen(3000); console.log("Listening 3000")
+//SELECT * FROM tablename ORDER BY column DESC LIMIT 1
+//SELECT post.title  FROM post INNER JOIN category on post.category = category.id;
+//SELECT category.title FROM post INNER JOIN category on post.category = category.id;
+/*SELECT category.title , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category on post.category = category.id;*/
+app.listen(3000);
+console.log("Listening 3000")

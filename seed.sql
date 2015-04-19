@@ -29,21 +29,24 @@
 -- "password", 
 -- "itsnatscott@gmail.com");
 
-INSERT INTO comments (comment, userId, postId) VALUES 
-("Needs brighter colors",
-"itsnatscott", 
-1),
-("Needs more unicorns",
-"itsnatscott", 
-2),
-("Needs personality",
-"itsnatscott", 
-3);
-
--- INSERT INTO category (title, descrp, posts) VALUES 
--- ("Illustration",
--- "Books, Editorial, Advertising", 
+-- INSERT INTO comments (comment, userId, postId) VALUES 
+-- ("Needs brighter colors",
+-- "itsnatscott", 
+-- 1),
+-- ("Needs more unicorns",
+-- "itsnatscott", 
 -- 2),
--- ("Corporate Web Design",
--- "Branding pages, customer service, product release",
--- 1);
+-- ("Needs personality",
+-- "itsnatscott", 
+-- 3);
+
+INSERT INTO category (title, descrp, posts, votes) VALUES 
+("Illustration",
+"Books, Editorial, Advertising", 
+3, 0),
+("Corporate Web Design",
+"Branding pages, customer service, product release",
+4, 0),
+("Gifs",
+"They move! - Sometimes they are see through!",
+2, 0);

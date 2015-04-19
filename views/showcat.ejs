@@ -1,6 +1,16 @@
 <% include head %>
 <h1> <%= title %> <h1>
 <h2> <%= script %> <h2>
+<h4> popularity: <%= popularity %> <h4> 
+<form method="POST" action = '/designistforum/category/<%= ids %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="up">
+<button>GOOD Category</button></form> 
+<h4 style="font-family: monospace;"></h4>
+
+
+<form method = "POST" action = '/designistforum/category/<%= ids %>/votes?_method=PUT'>
+<input type="hidden" name="vote" value="down">
+<button>BAD Category</button></form> <h4 style="font-family: monospace;"></h4>
 
 
 	<% posts.forEach(function(obj){ %>
@@ -12,8 +22,7 @@
 			<p style = font-family: 'Oswald', sans-serif;>
 			<br> <%= obj.body %> <br>
 			comments: <%= obj.comment %> <br>
-			upvotes: <%= obj.upvote %> <br> 
-			downvotes: <%= obj.downvote %> <br>
+			popularity: <%= obj.upvote %> <br> 
 			<br>
 			</p>
 			<% }); %>
@@ -27,11 +36,8 @@
 			<br>posts: <%= itm.posts %> </li>
 			<% }); %>
 			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
-		
+			<br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br>
+			<img id="randomgif" src="<%= gif %>" />
 
-			<br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a>
-
-
-
-		</body>
+</body>
 		</html>
