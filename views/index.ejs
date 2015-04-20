@@ -1,28 +1,30 @@
 <% include head %>
-<a style="font-family: monospace;" href="/designistforum/user/new"> new user id </a><br>	<a style="font-family: monospace;" href="/designistforum/popular"> sort by <b>popularity</b> </a>	<br>
-<a style="font-family: monospace;" href="/designistforum"> sort by <b>most recent</b> </a>	
+<ul style="float: right; margin-right: 11px;"> 
+	<h2> Categories </h2>
+	<% cat.forEach(function(itm){ %>
+			<ul style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
+			<br>posts: <%= itm.posts %>
+			<br>popularity: <%= itm.votes %> </ul></p>
+			<% }); %>
+			<ul style="margin-left: 20px"><a style="font-family: monospace;" href="/designistforum/category/new">    add new category </a></ul></ul><br><br>
+
+<li style="display: inline"><a style="font-family: monospace;" href="/designistforum/user/new"> new user id </a><a style="font-family: monospace;" href="/designistforum/popular">- sort by <b>popularity</b> </a>
+<a style="font-family: monospace;" href="/designistforum"> - sort by <b>most recent</b> </a>	</li>
 	<% post.forEach(function(obj){ %>
-		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/category/posts/<%= obj.post_id %>" ><%= obj.title %></a></h2>
-			<h3><%= obj.category_title %></a></h3>
+		<h2><a href="/designistforum/category/posts/<%= obj.post_id %>" ><%= obj.title %></a></h2>
 			<br>
-			<img style="height:400px;max-width:500px;width: expression(this.width > 500 ? 500: true);" id="Happy_CpuDude" src="<%= obj.pic %>" />
+			<img src="<%= obj.pic %>" />
 			</br>
 			<p style = font-family: 'Oswald', sans-serif;> 
+			category:<%= obj.category_title %><br>
 			comments: <%= obj.comment %> <br>
 			popularity: <%= obj.upvote %> <br> 
 			<br><br>
 			</p></br>
 			<% }); %>
 			
-			<ul> 
-			<h2 style="font-family: monospace;"> Categories </h2>
-			<% cat.forEach(function(itm){ %>
-			<li style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
-			<br>posts: <%= itm.posts %>
-			<br>popularity: <%= itm.votes %> </li>
-			<% }); %>
-			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
-		<img id="randomgif" src="<%= gif %>" />
+			
+		<img style ="width:200px" id="randomgif" src="<%= gif %>" />
 
 		</body>
 		</html>
