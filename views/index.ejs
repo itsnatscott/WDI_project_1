@@ -8,8 +8,8 @@
 			<% }); %>
 			<ul style="margin-left: 20px"><a style="font-family: monospace;" href="/designistforum/category/new">    add new category </a></ul></ul><br><br>
 
-<li style="display: inline"><a style="font-family: monospace;" href="/designistforum/user/new"> new user id </a><a style="font-family: monospace;" href="/designistforum/popular">- sort by <b>popularity</b> </a>
-<a style="font-family: monospace;" href="/designistforum"> - sort by <b>most recent</b> </a>	</li>
+<li style="display: inline; margin-left: 20px"><a style="font-family: monospace;" href="/designistforum/popular"> sort by popularity  </a>
+<a style="font-family: monospace;" href="/designistforum"> <b> sort by most recent </b> </a>	</li>
 	<% post.forEach(function(obj){ %>
 		<h2><a href="/designistforum/category/posts/<%= obj.post_id %>" ><%= obj.title %></a></h2>
 			<br>
@@ -21,7 +21,7 @@
 			popularity: <%= obj.upvote %> <br> 
 			</p></br>
 			<% }); %>
-			<li><a href="/designistforum?offset=<%= pagination %>">Next 3</a></li><li><a href="/designistforum?offset=<%= unpagination %>">     Previous 3</a></li><br><br><br><br>
+			<li style="display: inline; margin-left: 20px"><b><a href="/designistforum/popular?offset=<%= pagination %>">+Next 3+ </a><a href="/designistforum/popular?offset=<%= unpagination %>">+Previous 3+</b></a></li><br><br>
 			
 			
 		<img style ="width:200px" id="randomgif" src="<%= gif %>" />
