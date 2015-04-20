@@ -14,14 +14,14 @@
 -- );
 
 
-DROP TABLE IF EXISTS category;
-CREATE TABLE category (
-  id INTEGER PRIMARY KEY,
-  title TEXT,
-  descrp TEXT,
-  posts INTEGER,
-  votes INTEGER
-);
+-- DROP TABLE IF EXISTS category;
+-- CREATE TABLE category (
+--   id INTEGER PRIMARY KEY,
+--   title TEXT,
+--   descrp TEXT,
+--   posts INTEGER,
+--   votes INTEGER
+-- );
 
 -- DROP TABLE IF EXISTS comments;
 -- CREATE TABLE comments (

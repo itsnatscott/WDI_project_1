@@ -100,8 +100,6 @@ app.post('/designistforum/category/', function(req, res) {
 	});
 });
 //show all from certain category
-
-
 app.get('/designistforum/category/:id', function(req, res) {
 	var id = parseInt(req.params.id);
 	db.all("SELECT * FROM post WHERE category = ? ORDER BY post.upvote DESC LIMIT 10", id, function(err, data) {
@@ -137,6 +135,14 @@ app.get('/designistforum/category/:id', function(req, res) {
 	});
 });
 
+//add subsriber to category
+app.post('/designistforum/category/:id/subscribe', function(req, res) {
+	db.run("INSERT INTO users (username, password, email, subs) VALUES (?, ?, ?, ?)", req.body.username, req.body.password, req.body.email, req.params.id, function(err) {
+		if (err) console.log(err);
+		res.redirect('/designistforum/category/'+ req.params.id);
+	});
+});
+
 //increment popularity of category
 app.put('/designistforum/category/:id/votes', function(req, res) {
 	if (req.body.vote === "up") {
@@ -162,17 +168,17 @@ app.get('/designistforum/category/:id/posts/new', function(req, res) {
 });
 //shove the new post into existance
 app.post('/designistforum/category/:catid/posts', function(req, res) {
-	var pageId = req.params.catid
-	var postBody = req.body.body
-//////sendgrid
+	var pageId = req.params.catid;
+	var postBody = req.body.body;
+
+//send email to subscribers
 db.all("SELECT email FROM users WHERE subs = ?", parseInt(req.params.catid), function(err, data) {
 		console.log(req.params.catid)
 		var emailsObj = data;
 		var emails = []
 		for(i=0;i<emailsObj.length;i++){
 			emails.push(emailsObj[i].email)
-		}
-		console.log(emails,emailsObj);
+		};
 	sendgrid.send({
   to:       emails,
   from:     'itsnatscott@gmail.com',
@@ -183,7 +189,7 @@ db.all("SELECT email FROM users WHERE subs = ?", parseInt(req.params.catid), fun
   console.log(json);
 });
 });
-/////sendgrid
+//insert contents into post
 	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote) VALUES (? , ? , ? , ? , ? , ? , ?)", req.body.title, postBody, req.body.pic, pageId, 0, 0, 0, function(err) {
 		if (err) console.log(err);
 	})
@@ -281,10 +287,5 @@ app.delete("/designistforum/:id", function(req, res) {
 		res.redirect('/')
 	});
 });
-
-//SELECT * FROM tablename ORDER BY column DESC LIMIT 1
-//SELECT post.title  FROM post INNER JOIN category on post.category = category.id;
-//SELECT category.title FROM post INNER JOIN category on post.category = category.id;
-/*SELECT category.title , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category on post.category = category.id;*/
 app.listen(3000);
 console.log("Listening 3000");

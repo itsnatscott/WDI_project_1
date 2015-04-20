@@ -37,7 +37,21 @@
 			<% }); %>
 			
 			<h3><a style="font-family: monospace;" href="/designistforum/category/<%= ids %>/posts/new"> Add a New Post! </a></h3>
-		<br><br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br>
+		<br><br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br><br>
+
+
+
+
+
+<a href="/designistforum/category/<%= ids %>/"> Test Link </a>
+<h2 style="font-size: 20px;"> Subscribe to: <%= title %> </h2><br>
+			<form action ="/designistforum/category/<%= ids %>/subscribe" method="POST">
+<input style = "width: 250px;" type="text" name="username" placeholder="username" required><br><br>
+<input style = "width: 250px;" type="text" name="password" placeholder="password" required><br><br>
+<input style = "width: 250px;" type="text" name="email" placeholder="email" required><br><br>
+
+<button>Submit</button><br><br>
+</form>
 			<img id="randomgif" src="<%= gif %>" />
 
 </body>
