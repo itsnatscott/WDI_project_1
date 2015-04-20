@@ -31,13 +31,14 @@ CREATE TABLE category (
 --   postId INTEGER 
 -- );
 
--- DROP TABLE IF EXISTS users;
--- CREATE TABLE users (
---   id INTEGER PRIMARY KEY AUTOINCREMENT,
---   username TEXT,
---   password TEXT,
---   email TEXT 
--- );
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT,
+  password TEXT,
+  email TEXT, 
+  subs INTEGER
+);
 
 -- CREATE TRIGGER timestamp_update BEFORE UPDATE ON entries BEGIN
 --   UPDATE entries SET updated_at = CURRENT_TIMESTAMP WHERE id = new.id;

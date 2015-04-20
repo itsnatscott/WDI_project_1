@@ -1,7 +1,16 @@
 <% include head %>
+<ul style="float:right; padding-right:10px;padding-top:10px;"> 
+	<h2> Categories </h2>
+	<% cat.forEach(function(itm){ %>
+			<ul style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
+			<br>posts: <%= itm.posts %>
+			<br>popularity: <%= itm.votes %> </ul></p>
+			<% }); %>
+			<ul style="margin-left: 20px"><a style="font-family: monospace;" href="/designistforum/category/new">    add new category </a></ul></ul><br><br>
+
 <h1> <%= title %> <h1>
-<h2> <%= script %> <h2>
-<h4> popularity: <%= popularity %> <h4> 
+<h2 style="font-family: monospace;font-size: 20px;"> <%= script %> <h2>
+<h4 style= "margin-left: 20px"; > popularity: <%= popularity %> <h4> 
 <form method="POST" action = '/designistforum/category/<%= ids %>/votes?_method=PUT'>
 <input type="hidden" name="vote" value="up">
 <button>GOOD Category</button></form> 
@@ -14,7 +23,7 @@
 
 
 	<% posts.forEach(function(obj){ %>
-		<h2 style = font-family: 'Oleo Script', cursive;><a href="/designistforum/category/posts/<%= obj.id %>" ><%= obj.title %></a></h2>
+		<h2 style = font-family: 'Lobster', cursive;><a href="/designistforum/category/posts/<%= obj.id %>" ><%= obj.title %></a></h2>
 			<h3> <%= obj.descrp %> </h3>
 			</br>
 			<img style="width:500px"src="<%= obj.pic %>" />
@@ -28,15 +37,7 @@
 			<% }); %>
 			
 			<h3><a style="font-family: monospace;" href="/designistforum/category/<%= ids %>/posts/new"> Add a New Post! </a></h3>
-		<br>
-			<ul> 
-			<h2 style="font-family: monospace;"> Categories </h2>
-			<% cat.forEach(function(itm){ %>
-			<li style="font-family: monospace;"> <p> <a href="/designistforum/category/ <%= itm.id %>"><b><%= itm.title %></a></b>
-			<br>posts: <%= itm.posts %> </li>
-			<% }); %>
-			<a style="font-family: monospace;" href="/designistforum/category/new"> add new category </a></p></ul><br><br>
-			<br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br>
+		<br><br><br><a style="font-family: monospace;" href="/">Back to DesignistForum</a><br>
 			<img id="randomgif" src="<%= gif %>" />
 
 </body>

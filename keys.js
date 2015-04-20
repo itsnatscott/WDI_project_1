@@ -1,2 +1,2 @@
-var Giphy ="dc6zaTOxFJmzC"
-module.exports = Giphy
+var Key =["dc6zaTOxFJmzC","itsnatscott","1t5sendgrid"]
+module.exports = Key

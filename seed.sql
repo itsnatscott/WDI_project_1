@@ -24,10 +24,23 @@
 -- 0,
 -- 0);
 
--- INSERT INTO users (username, password, email) VALUES 
--- ("ItsNatScott",
--- "password", 
--- "itsnatscott@gmail.com");
+INSERT INTO users (username, password, email, subs) VALUES 
+("ItsNatScott",
+"password", 
+"itsnatscott@gmail.com",
+1),
+("ItsNatScott",
+"password", 
+"itsnatscott@hotmail.com",
+1),
+("ItsNatScott",
+"password", 
+"itsnatscott@aol.com",
+1),
+("ItsNatScott",
+"password", 
+"itsnatscott@yahoo.com",
+1);
 
 -- INSERT INTO comments (comment, userId, postId) VALUES 
 -- ("Needs brighter colors",

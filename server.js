@@ -1,5 +1,5 @@
 //set up npm modules
-var Giphy = require('./keys.js')
+var Key = require('./keys.js')
 var express = require('express');
 var app = express();
 var sqlite3 = require('sqlite3').verbose();
@@ -15,6 +15,7 @@ app.use(methodOverride('_method'));
 var request = require('request');
 /////mardownparser
 var markdown = require('markdown').markdown;
+var sendgrid  = require('sendgrid')(Key[1], Key[2]);
 
 var gifs = [];
 var ran = function() {
@@ -23,12 +24,12 @@ var ran = function() {
 ////////BREAKS WHEN ON TRAIN///////
 
 
-// request("http://api.giphy.com/v1/gifs/search?q=art&api_key=" + Giphy, function(err, response, body) {
-// 	var list = JSON.parse(body)
-// 	for (i = 0; i < 25; i++) {
-// 		gifs.push(list.data[i].images.fixed_width["url"])
-// 	};
-// });
+request("http://api.giphy.com/v1/gifs/search?q=art&api_key=" + Key[0], function(err, response, body) {
+	var list = JSON.parse(body)
+	for (i = 0; i < 25; i++) {
+		gifs.push(list.data[i].images.fixed_width["url"])
+	};
+});
 
 
 //redirect "/"
@@ -163,8 +164,27 @@ app.get('/designistforum/category/:id/posts/new', function(req, res) {
 app.post('/designistforum/category/:catid/posts', function(req, res) {
 	var pageId = req.params.catid
 	var postBody = req.body.body
-	console.log(req.body.body)
-	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote) VALUES (? , ? , ? , ? , ? , ? , ?)", req.body.title, postBody, req.body.pic, pageId, 0, 0, 0, 0, function(err) {
+//////sendgrid
+db.all("SELECT email FROM users WHERE subs = ?", parseInt(req.params.catid), function(err, data) {
+		console.log(req.params.catid)
+		var emailsObj = data;
+		var emails = []
+		for(i=0;i<emailsObj.length;i++){
+			emails.push(emailsObj[i].email)
+		}
+		console.log(emails,emailsObj);
+	sendgrid.send({
+  to:       emails,
+  from:     'itsnatscott@gmail.com',
+  subject:  'Hello Email Recipients',
+  text:     postBody + " " +req.body.pic, 
+}, function(err, json) {
+  if (err) { return console.error(err); }
+  console.log(json);
+});
+});
+/////sendgrid
+	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote) VALUES (? , ? , ? , ? , ? , ? , ?)", req.body.title, postBody, req.body.pic, pageId, 0, 0, 0, function(err) {
 		if (err) console.log(err);
 	})
 	db.run("UPDATE category SET posts = posts +1 WHERE id = ?", pageId)
