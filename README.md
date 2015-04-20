@@ -1,11 +1,12 @@
 #deignistforum
-An application that allows registered users comment and vote on posted artwork
-Will allow users to submit artwork (via url) or generate artwork from the instagram API, or Giphy API, hopefully i can find another better suited one. to seed the discussion.
+An application that allows users comment to and vote on posted artwork
+Will allow users to submit artwork (via url) to discuss, add categories, posts and comments
 
+https://trello.com/b/MHTu55iT/wdi-project-1
 
 index page
-	list 10 most recent posts
-	along with the user who posted it, up-votes, down-votes, and # of comments
+	list 3 most recent posts (10 once there are more posts)
+	along with the user popularity, and # of comments
 	list of categories
 	create category
 
@@ -28,5 +29,3 @@ open post page
 	subscribe to feed
 	see subscribers
 	delete post
-	time-updated
-	time expires
