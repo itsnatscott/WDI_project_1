@@ -38,27 +38,35 @@ app.get("/", function(req, res) {
 });
 
 //show all posts
-app.get('/designistforum', function(req, res) {
-	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.upvote DESC LIMIT 5", function(err, data) {
+app.get('/designistforum', function(req, res){
+	if (req.query.offset === undefined){ req.query.offset = 0};
+	console.log(req.query.offset)
+	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic, post.upvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.id DESC LIMIT 3 OFFSET ?", req.query.offset, function(err, data) {
 		var posts = data;
 		db.all("SELECT * FROM category ORDER BY category.votes DESC LIMIT 5", function(err, data2) {
 			var cats = data2
 			res.render("index.ejs", {
 				post: posts,
 				cat: cats,
+				pagination: parseInt(req.query.offset) + 3,
+				unpagination: parseInt(req.query.offset) - 3,
 				gif: gifs[ran()]
 			});
 		});
 	});
 });
-app.get('/designistforum/popular', function(req, res) {
-	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.id DESC LIMIT 5", function(err, data) {
+app.get('/designistforum/popular', function(req, res){
+	if (req.query.offset === undefined){ req.query.offset = 0};
+	console.log(req.query.offset)
+	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic, post.upvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.upvote DESC LIMIT 3 OFFSET ?", req.query.offset, function(err, data) {
 		var posts = data;
 		db.all("SELECT * FROM category ORDER BY category.votes DESC LIMIT 5", function(err, data2) {
 			var cats = data2
-			res.render("index.ejs", {
+			res.render("indexpop.ejs", {
 				post: posts,
 				cat: cats,
+				pagination: parseInt(req.query.offset) + 3,
+				unpagination: parseInt(req.query.offset) - 3,
 				gif: gifs[ran()]
 			});
 		});

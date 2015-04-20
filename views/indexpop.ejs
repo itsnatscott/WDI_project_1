@@ -19,9 +19,10 @@
 			category: <%= obj.category_title %><br>
 			comments: <%= obj.comment %> <br>
 			popularity: <%= obj.upvote %> <br> 
+			<br><br>
 			</p></br>
 			<% }); %>
-			<li><a href="/designistforum?offset=<%= pagination %>">Next 3</a></li><li><a href="/designistforum?offset=<%= unpagination %>">     Previous 3</a></li><br><br><br><br>
+			<li><a href="/designistforum/popular?offset=<%= pagination %>">Next 3</a></li><li><a href="/designistforum/popular?offset=<%= unpagination %>">     Previous 3</a></li><br>
 			
 			
 		<img style ="width:200px" id="randomgif" src="<%= gif %>" />
