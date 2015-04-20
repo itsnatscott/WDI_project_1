@@ -1,9 +1,11 @@
 <% include head %>
 
-<h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3><h4>Popularity:<%= thisPost.upvote %><br>
+<h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3>
+<h2><%= thisPost.title %></a></h2>
 <img style="max-height:600px;max-width:800px;" src="<%= thisPost.pic %>" /><br>
+<h4 style = "margin-left: 20px;">Popularity:<%= thisPost.upvote %><br>
 <%= thisPost.created_at %> <br>
-<%= thisPost.body %> <br><br>
+<%= thisPost.body %> <br><br></h4>
 
 
 
@@ -18,7 +20,7 @@
 <button>BAD POST</button></form> <h4 style="font-family: monospace;"></h4>
 
 
-<a href="/designistforum/category/<%= thisCat.id %>/posts/<%= thisPost.id %>/edit">edit this post </a>
+<a style = "margin-left: 20px;" href="/designistforum/category/<%= thisCat.id %>/posts/<%= thisPost.id %>/edit">edit this post </a>
 <h3> comments: </h3>
 <% comment.forEach(function(obj){ %>
 			<p><b><%= obj.userId %></b><br>
@@ -32,11 +34,11 @@
 <button>Submit</button><br><br>
 </form> 
 
-<br><br><form method="POST" action="/designistforum/<%= thisPost.id %>?_method=DELETE">
+<form method="POST" action="/designistforum/<%= thisPost.id %>?_method=DELETE">
 <button>erase this post</button>
 	</form>
 
-<a style="font-family: monospace;" href="/">Back to Designist Forum</a><br><br>
+<a style="font-family: monospace; margin-left: 20px;" href="/">Back to Designist Forum</a><br><br>
 <img id="randomgif" src="<%= gif %>" />
 
 
