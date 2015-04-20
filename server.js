@@ -15,7 +15,6 @@ app.use(methodOverride('_method'));
 var request = require('request');
 /////mardownparser
 var markdown = require('markdown').markdown;
-console.log(markdown.toHTML("Hello *World*!"));
 
 var gifs = [];
 var ran = function() {
@@ -24,12 +23,12 @@ var ran = function() {
 ////////BREAKS WHEN ON TRAIN///////
 
 
-request("http://api.giphy.com/v1/gifs/search?q=art&api_key=" + Giphy, function(err, response, body) {
-	var list = JSON.parse(body)
-	for (i = 0; i < 25; i++) {
-		gifs.push(list.data[i].images.fixed_width["url"])
-	};
-});
+// request("http://api.giphy.com/v1/gifs/search?q=art&api_key=" + Giphy, function(err, response, body) {
+// 	var list = JSON.parse(body)
+// 	for (i = 0; i < 25; i++) {
+// 		gifs.push(list.data[i].images.fixed_width["url"])
+// 	};
+// });
 
 
 //redirect "/"
@@ -38,9 +37,10 @@ app.get("/", function(req, res) {
 });
 
 //show all posts
-app.get('/designistforum', function(req, res){
-	if (req.query.offset === undefined){ req.query.offset = 0};
-	console.log(req.query.offset)
+app.get('/designistforum', function(req, res) {
+	if (req.query.offset === undefined) {
+		req.query.offset = 0
+	};
 	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic, post.upvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.id DESC LIMIT 3 OFFSET ?", req.query.offset, function(err, data) {
 		var posts = data;
 		db.all("SELECT * FROM category ORDER BY category.votes DESC LIMIT 5", function(err, data2) {
@@ -55,9 +55,10 @@ app.get('/designistforum', function(req, res){
 		});
 	});
 });
-app.get('/designistforum/popular', function(req, res){
-	if (req.query.offset === undefined){ req.query.offset = 0};
-	console.log(req.query.offset)
+app.get('/designistforum/popular', function(req, res) {
+	if (req.query.offset === undefined) {
+		req.query.offset = 0
+	};
 	db.all("SELECT category.title AS category_title , category.id AS category_ID , post.id AS post_id , post.title , post.pic, post.upvote FROM post INNER JOIN category ON post.category = category.id ORDER BY post.upvote DESC LIMIT 3 OFFSET ?", req.query.offset, function(err, data) {
 		var posts = data;
 		db.all("SELECT * FROM category ORDER BY category.votes DESC LIMIT 5", function(err, data2) {
@@ -93,8 +94,7 @@ app.post('/designistforum/category/', function(req, res) {
 	});
 
 	db.get("SELECT id FROM category WHERE title = ?", req.body.title, function(err, data) {
-		var newCatId = data.id
-		console.log(newCatId)
+		var newCatId = data.id;
 		res.redirect('/designistforum/category/' + newCatId + '/posts/new');
 	});
 });
@@ -102,39 +102,38 @@ app.post('/designistforum/category/', function(req, res) {
 
 
 app.get('/designistforum/category/:id', function(req, res) {
-	var id = parseInt(req.params.id)
-	console.log(id)
-		db.all("SELECT * FROM post WHERE category = ? ORDER BY post.upvote DESC LIMIT 10", id, function(err, data) {
-			items = data;
-			db.all("SELECT * FROM category", function(err, data2) {
-				var cats = data2
-				var pTite = cats[id - 1].title
-				var pDesc = cats[id - 1].descrp
-				var pVote = cats[id - 1].votes
+	var id = parseInt(req.params.id);
+	db.all("SELECT * FROM post WHERE category = ? ORDER BY post.upvote DESC LIMIT 10", id, function(err, data) {
+		items = data;
+		db.all("SELECT * FROM category", function(err, data2) {
+			var cats = data2;
+			var pTite = cats[id - 1].title;
+			var pDesc = cats[id - 1].descrp;
+			var pVote = cats[id - 1].votes;
 
-				if (cats[id-1].posts === 0) {
-					res.render('deletecat.ejs', {
-						posts: items,
-						cat: cats,
-						ids: req.params.id,
-						title: pTite,
-						script: pDesc,
-						popularity: pVote,
-						gif: gifs[ran()]
-					})
-				} else {
-					res.render('showcat.ejs', {
-						posts: items,
-						cat: cats,
-						ids: req.params.id,
-						title: pTite,
-						script: pDesc,
-						popularity: pVote,
-						gif: gifs[ran()]
-					});
-				};
-			});
+			if (cats[id - 1].posts === 0) {
+				res.render('deletecat.ejs', {
+					posts: items,
+					cat: cats,
+					ids: req.params.id,
+					title: pTite,
+					script: pDesc,
+					popularity: pVote,
+					gif: gifs[ran()]
+				})
+			} else {
+				res.render('showcat.ejs', {
+					posts: items,
+					cat: cats,
+					ids: req.params.id,
+					title: pTite,
+					script: pDesc,
+					popularity: pVote,
+					gif: gifs[ran()]
+				});
+			};
 		});
+	});
 });
 
 //increment popularity of category
@@ -152,8 +151,8 @@ app.get('/designistforum/category/:id/posts/new', function(req, res) {
 	var id = req.params.id;
 	db.all("SELECT title , id FROM category WHERE id = ?", id, function(err, data) {
 		var cat = data;
-		var catTitle = cat[0].title
-		var catId = cat[0].id
+		var catTitle = cat[0].title;
+		var catId = cat[0].id;
 		res.render('new.ejs', {
 			catTitles: catTitle,
 			catIds: catId
@@ -165,11 +164,11 @@ app.post('/designistforum/category/:catid/posts', function(req, res) {
 	var pageId = req.params.catid
 	var postBody = req.body.body
 	console.log(req.body.body)
-		db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote , downvote) VALUES (? , ? , ? , ? , ? , ? , ? , ?)", req.body.title, postBody, req.body.pic, pageId, 0, 0, 0, 0, function(err) {
-			if (err) console.log(err);
-		})
-		db.run("UPDATE category SET posts = posts +1 WHERE id = ?", pageId)
-		res.redirect('/designistforum/category/' + pageId)
+	db.run("INSERT INTO post (title, body, pic, category, author, comment , upvote) VALUES (? , ? , ? , ? , ? , ? , ?)", req.body.title, postBody, req.body.pic, pageId, 0, 0, 0, 0, function(err) {
+		if (err) console.log(err);
+	})
+	db.run("UPDATE category SET posts = posts +1 WHERE id = ?", pageId)
+	res.redirect('/designistforum/category/' + pageId)
 });
 
 
@@ -206,15 +205,15 @@ app.put('/designistforum/category/posts/:id/votes', function(req, res) {
 
 //add comment to a post
 app.post('/designistforum/category/posts/:id/comments', function(req, res) {
-	db.run("INSERT INTO comments (comment, userId, postId) VALUES (? , ? , ?)", req.body.comment, req.body.name, req.params.id)
-	db.run("UPDATE post SET comment = comment +1 WHERE id = ?", req.params.id)
-	res.redirect("/designistforum/category/posts/" + req.params.id)
+	db.run("INSERT INTO comments (comment, userId, postId) VALUES (? , ? , ?)", req.body.comment, req.body.name, req.params.id);
+	db.run("UPDATE post SET comment = comment +1 WHERE id = ?", req.params.id);
+	res.redirect("/designistforum/category/posts/" + req.params.id);
 });
 
 //send user to edit form
 app.get("/designistforum/category/:catid/posts/:id/edit", function(req, res) {
-	var posId = req.params.id
-	var catId = req.params.catid
+	var posId = req.params.id;
+	var catId = req.params.catid;
 	db.get("SELECT * FROM post WHERE id = ?", req.params.id, function(err, data) {
 		item = data
 		res.render('edit.ejs', {
@@ -227,8 +226,8 @@ app.get("/designistforum/category/:catid/posts/:id/edit", function(req, res) {
 
 //update post
 app.put("/designistforum/category/:catid/posts/:id/update", function(req, res) {
-	var id = req.params.id
-	var catId = req.params.catid
+	var id = req.params.id;
+	var catId = req.params.catid;
 	db.run("UPDATE post SET title = ? , body = ? WHERE id = ?", req.body.title, req.body.body, id, function(err) {
 		if (err) {
 			console.log(err)
@@ -246,11 +245,11 @@ app.delete("/designistforum/category/:id/delete", function(req, res) {
 
 //delete a post
 app.delete("/designistforum/:id", function(req, res) {
-	var id = req.params.id
-	var thisCat = 0
+	var id = req.params.id;
+	var thisCat = 0;
 	db.get("SELECT category FROM post WHERE id = ?", id, function(err, data) {
 		thisCat = data.category;
-		console.log("deleting 1 from", thisCat)
+		console.log("deleting 1 from", thisCat);
 		db.run("UPDATE category SET posts = posts - 1 WHERE id = ?", thisCat, function(err) {
 			if (err) {
 				console.log(err)
@@ -268,4 +267,4 @@ app.delete("/designistforum/:id", function(req, res) {
 //SELECT category.title FROM post INNER JOIN category on post.category = category.id;
 /*SELECT category.title , post.title , post.pic , post.comment , post.upvote , post.downvote FROM post INNER JOIN category on post.category = category.id;*/
 app.listen(3000);
-console.log("Listening 3000")
+console.log("Listening 3000");

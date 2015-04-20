@@ -1,7 +1,7 @@
 <% include head %>
 
 <h3><a href="/designistforum/category/<%= thisCat.id %>" ><%= thisCat.title %></a></h3><h4>Popularity:<%= thisPost.upvote %><br>
-<img style="max-height:600px;max-width:800px; expression(this.width > 500 ? 500: true);" src="<%= thisPost.pic %>" /><br>
+<img style="max-height:600px;max-width:800px;" src="<%= thisPost.pic %>" /><br>
 <%= thisPost.created_at %> <br>
 <%= thisPost.body %> <br><br>
 
