@@ -1,0 +1,34 @@
+{
+  "name": "project_1",
+  "version": "1.0.0",
+  "description": "An application that allows users comment to and vote on posted artwork Will allow users to submit artwork (via url) to discuss, add categories, posts and comments. http://45.55.154.205:3000/designistforum/popular",
+  "main": "keys.js",
+  "dependencies": {
+    "markdown": "^0.5.0",
+    "body-parser": "^1.12.2",
+    "md2html": "^0.0.1",
+    "express": "^4.12.3",
+    "ejs": "^2.3.1",
+    "method-override": "^2.3.2",
+    "nodemailer": "^1.3.4",
+    "sendgrid": "^1.6.1",
+    "request": "^2.55.0",
+    "sqlite3": "^3.0.5",
+    "smtpapi": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itsnatscott/WDI_project_1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itsnatscott/WDI_project_1/issues"
+  },
+  "homepage": "https://github.com/itsnatscott/WDI_project_1"
+}
